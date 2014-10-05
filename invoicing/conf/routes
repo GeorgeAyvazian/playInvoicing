@@ -1,11 +1,10 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
+GET           /                        controllers.Application.main(any = "none")
 
-# Home page
-GET     /                           controllers.Application.index
+GET           /views/*any              controllers.Application.loadPublicHTML(any)
 
-# Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET           /api/somemodels            controllers.SomeModelController.all
+POST          /api/somemodels/new        controllers.SomeModelController.create
+DELETE        /api/somemodels/:id        controllers.SomeModelController.delete(id: String)
 
-    
+GET           /assets/*file            controllers.Assets.at(path = "/public", file)
+GET           /*any                    controllers.Application.main(any)
