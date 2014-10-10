@@ -2,9 +2,15 @@ GET           /                        controllers.Application.main(any = "none"
 
 GET           /views/*any              controllers.Application.loadPublicHTML(any)
 
-GET           /api/somemodels            controllers.SomeModelController.all
-POST          /api/somemodels/new        controllers.SomeModelController.create
-DELETE        /api/somemodels/:id        controllers.SomeModelController.delete(id: String)
+GET           /api/products            controllers.ProductController.all
+POST          /api/products/new        controllers.ProductController.create
+DELETE        /api/products/:id        controllers.ProductController.delete(id: String)
+
+GET           /api/taxes               controllers.TaxController.all
+GET           /api/taxes/:id           controllers.TaxController.find(id: String)
+PUT           /api/taxes               controllers.TaxController.update
+POST          /api/taxes               controllers.TaxController.create
+DELETE        /api/taxes/:id           controllers.TaxController.delete(id: String)
 
 GET           /assets/*file            controllers.Assets.at(path = "/public", file)
 GET           /*any                    controllers.Application.main(any)

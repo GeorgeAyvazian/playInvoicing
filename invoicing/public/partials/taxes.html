@@ -1,0 +1,21 @@
+<h3>Tax Rates</h3>
+<table border="1">
+    <thead>
+    <tr>
+        <td>Description</td>
+        <td>Amount</td>
+        <td>&nbsp;</td>
+    </tr>
+    </thead>
+    <tr ng-repeat="taxRate in taxRates">
+        <td contenteditable="true" ng-model="description">{{taxRate.description}}</td>
+        <td contenteditable="true" ng-model="amount">{{taxRate.amount}}</td>
+        <td><a href="#" class="close" ng-click="deleteTaxRate(taxRate.id)">&times;</a></td>
+    </tr>
+</table>
+
+<form name="taxRateForm" novalidate>
+    <input type="text" placeholder="description" ng-model="taxRate.description" ng-required="true"/>
+    <input type="number" placeholder="amount" ng-model="taxRate.amount"/>
+    <input type="submit" value="Create New Tax Rate" class="btn-custom" ng-click="createNewTaxRate(taxRateForm.$valid)" ng-disabled="taxRateForm.$invalid"/>
+</form>

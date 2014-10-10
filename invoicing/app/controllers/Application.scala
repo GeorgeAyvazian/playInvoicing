@@ -12,7 +12,6 @@ object Application extends Controller {
     case s: String => "/public/partials/" + s + ".html"
   }
 
-  /** load an HTML page from public/html */
   def loadPublicHTML(any: String) = Action {
     import play.Play
     val projectRoot = Play.application.path
