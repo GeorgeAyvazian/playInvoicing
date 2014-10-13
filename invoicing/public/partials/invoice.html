@@ -1,23 +1,91 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="row">
-                <div class="col-md-4" contenteditable>Your Name</div>
+                <div class="col-md-offset-2 col-md-4" contenteditable>Your Name</div>
             </div>
             <div class="row">
-                <div class="col-md-4" contenteditable>Address Line 1</div>
+                <div class="col-md-offset-2 col-md-4" contenteditable>Address Line 1</div>
             </div>
             <div class="row">
-                <div class="col-md-4" contenteditable>Address Line 2</div>
+                <div class="col-md-offset-2 col-md-4" contenteditable>Address Line 2</div>
             </div>
             <div class="row">
-                <div class="col-md-4" contenteditable>City, State, Zip</div>
+                <div class="col-md-offset-2 col-md-4" contenteditable>City, State, Zip</div>
             </div>
         </div>
-        <div class="col-md-4 col-md-offset-4">Your Logo Here!</div>
+        <div class="col-md-offset-2 col-md-4">Your Logo Here!</div>
     </div>
     <div class="row">
         <hr style="height: 20px;">
     </div>
+    <div class="row">
+        <div class="col-md-2 col-md-offset-8">
+            <h2>Invoice</h2>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 10px;">
+        <div class="row">
+            <span class="col-md-2 text-right">Bill To</span>
+            <span class="col-md-2" contenteditable>Name</span>
+            <span class="col-md-offset-4 col-md-1 text-right">Invoice #</span>
+            <span class="col-md-1 text-left" contenteditable>1111</span>
+        </div>
+        <div class="row">
+            <span class="col-md-offset-2 col-md-2" contenteditable>Address 1</span>
+        </div>
+        <div class="row">
+            <span class="col-md-offset-2 col-md-2" contenteditable>Address 2</span>
+            <span class="col-md-offset-4 col-md-1 text-right">Date</span>
+            <span class="col-md-2 text-left" contenteditable>{{today}}</span>
+        </div>
+        <div class="row">
+            <span class="col-md-offset-2 col-md-2" contenteditable>City, State, Zip</span>
+        </div>
+    </div>
 
+    <div class="col-md-offset-1 col-md-10">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <td>Product</td>
+                <td class="col-md-1 text-right">Quantity</td>
+                <td class="col-md-1 text-right">Unit Price</td>
+                <td class="col-md-1 text-right">Tax</td>
+                <td class="col-md-1 text-right">Amount</td>
+                <td class="col-md-1 text-right">&nbsp;</td>
+            </tr>
+            </thead>
+            <tr ng-repeat="lineItem in lineItems">
+                <td contenteditable></td>
+                <td class="col-md-1">
+                    <input type="number" ng-blur="addLineItem()" ng-change="calculateAmount(lineItem)" ng-model="lineItem.quantity" class="form-control text-center col-md-1" />
+                </td>
+                <td class="col-md-1 text-right">{{lineItem.product.unitPrice}}</td>
+                <td class="col-md-2 text-right">
+                    <select   ng-change="calculateAmount(lineItem)" ng-model="lineItem.product.tax" ng-options="taxRate.description + ' (' + taxRate.amount + '%)'  for taxRate in taxRates"> </select>
+                </td>
+                <td class="col-md-1 text-right" contenteditable ng-model="lineItem.amount" format="Number">
+                    {{lineItem.amount}}
+                </td>
+                <td class="col-md-1 text-center">
+                    <a class="btn btn-danger" ng-click="removeLineItem(lineItem)">
+                        <i class="glyphicon glyphicon-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        </table>
+        <div class="row">
+            <span class="col-md-offset-9 col-md-1 text-right">Subtotal</span>
+            <span class="col-md-1  text-right">$234</span>
+        </div>
+        <div class="row">
+            <span class="col-md-offset-9 col-md-1 text-right">Tax</span>
+            <span class="col-md-1  text-right">$234</span>
+        </div>
+        <div class="row">
+            <span class="col-md-offset-9 col-md-1 text-right">Total</span>
+            <span class="col-md-1  text-right">$234</span>
+        </div>
+    </div>
 </div>

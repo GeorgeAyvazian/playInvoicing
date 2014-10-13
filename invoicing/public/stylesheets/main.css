@@ -14,3 +14,36 @@
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.16);
     -webkit-font-smoothing: antialiased;
 }
+
+.navbar .divider-vertical {
+    height: 50px;
+    margin: 0 9px;
+    border-right: 1px solid #ffffff;
+    border-left: 1px solid #f2f2f2;
+}
+
+.navbar-inverse .divider-vertical {
+    border-right-color: #222222;
+    border-left-color: #111111;
+}
+
+@media (max-width: 767px) {
+    .navbar-collapse .nav > .divider-vertical {
+        display: none;
+    }
+}
+
+body {
+    padding-top: 70px;
+    background: lightblue !important;
+}
+
+.navs {
+    background: lightgrey !important;
+}
+
+.gridStyle {
+    border: 1px solid rgb(212,212,212);
+    width: 400px;
+    height: 300px
+}

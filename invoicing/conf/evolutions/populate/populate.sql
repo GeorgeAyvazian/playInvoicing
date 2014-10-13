@@ -8,4 +8,12 @@ INSERT INTO tax_rates VALUES
 INSERT INTO products VALUES
   (1, 'Accomodation', 1255, 1),
   (2, 'Accounting Services', 140, 1),
-  (3, 'Hourly Charge', 150, 1)
+  (3, 'Hourly Charge', 150, 1);
+
+INSERT INTO invoices VALUES
+  (1, '1'),
+  (2, '2');
+
+
+INSERT INTO line_items (id, product_id, quantity, amount, invoice_id) VALUES (1, 1, 2, 10, 1);
+

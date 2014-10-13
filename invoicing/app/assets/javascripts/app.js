@@ -3,10 +3,11 @@ var app = angular.module('app', [
     'ngRoute',
     'ngResource',
     'ui.bootstrap',
+    'ngGrid',
     'controllers',
     'TaxRateService'
 ])
-    .constant('apiUrl', 'http://localhost:9000/api')
+    .constant('apiUrl', 'http://deepthought2:9000/api')
     .config(['$routeProvider', function ($routeProvider) {
         return $routeProvider
             .when("/", {

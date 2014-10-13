@@ -1,13 +1,12 @@
 app.directive('contenteditable', function () {
     return {
-        require: 'ngModel',
-        restrict: 'A',
+        scope: {
+            ngModel: '='
+        },
         link: function ($scope, elem, attrs) {
             elem.bind('blur', function () {
-                $scope.$apply(function () {
-                    $scope.taxRate[attrs.ngModel] = elem.html();
-                    $scope.updateTaxRate($scope.taxRate);
-                });
+                $scope.ngModel = attrs.format == 'Number' ? parseInt(elem.html()) : elem.html();
+                $scope.$apply();
             });
 
             elem.bind('keydown', function (event) {
@@ -31,8 +30,8 @@ app.directive('iautocomplete', ['$resource', 'apiUrl', function ($resource, apiU
                     event.preventDefault();
                 } else {
                     x = $resource(apiUrl + '/taxes/:id', {}, {query: {method: 'GET', isArray: true, params: {id: '@id'}}});
-                    x.query({id: elem.get(0).value}).$promise.then(function(result) {
-                        if(window.console) window.console.log(result);
+                    x.query({id: elem.get(0).value}).$promise.then(function (result) {
+                        if (window.console) window.console.log(result);
                     });
 
                 }

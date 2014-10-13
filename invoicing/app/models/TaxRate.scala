@@ -1,6 +1,7 @@
 package models
 
-import javax.persistence.{Column, Entity, GeneratedValue, Id, Table}
+import java.lang.{Long => L}
+import javax.persistence._
 import javax.validation.constraints.NotNull
 
 import play.api.libs.json._
@@ -11,47 +12,42 @@ import scala.annotation.meta.field
 
 @Entity
 @Table(name = "tax_rates")
-case class TaxRate(@(Id@field)
-                   @(GeneratedValue@field) id: Long,
-                   @(Column@field) description: String = "",
-                   @(Column@field) @(NotNull@field) amount: Long = -1L
+case class TaxRate(
+                    @(Id@field)
+                    @(GeneratedValue@field) id: L = null,
+                    @(Column@field) description: String = "",
+                    @(Column@field) @(NotNull@field) amount: Long = 0L
                     )
   extends Model {}
 
 object TaxRate {
 
-  implicit val reader = Json.reads[TaxRate]
+
+  import play.api.libs.functional.syntax._
+
+  implicit val idlessReader : Reads[TaxRate]= ((__ \ 'id).readNullable[L] and
+    (__ \ 'description).read[String] and
+    (__ \ 'amount).read[Long])((i, d, a) => {
+    TaxRate.apply(i.orNull, d, a)
+  })
+
   implicit val writer = Json.writes[TaxRate]
-  private val finder = new Finder(classOf[Long], classOf[TaxRate])
+  private val finder = new Finder(classOf[L], classOf[TaxRate])
 
-  def find(term: String) = {
-    import scala.collection.JavaConversions.collectionAsScalaIterable
-    (Json arr collectionAsScalaIterable(finder.where().ilike("description", "%" + term + "%").findList())).value.head.asInstanceOf[JsArray]
-  }
+  def find(term: String) = (Json arr i(finder.where().icontains("description", term).findList())).value.head
 
-  def taxRate(id: Long) = finder byId id
+  def taxRate(id: L) = finder byId id
 
-  def findAll: JsArray = {
-    import scala.collection.JavaConversions.collectionAsScalaIterable
-    (Json arr collectionAsScalaIterable(finder all)).value.head.asInstanceOf[JsArray]
-  }
+  def findAll = (Json arr i(finder all)).value.head.asInstanceOf[JsArray]
 
-  def create(jsTaxRate: JsValue) = {
-    val newTaxRate: TaxRate = new TaxRate(null.asInstanceOf[Long], (jsTaxRate \ "description").as[String], (jsTaxRate \ "amount").as[Long])
+  def save(jsTaxRate: JsValue) = {
+    val newTaxRate: TaxRate = jsTaxRate.as(TaxRate.idlessReader)
     newTaxRate save()
-    Json toJson newTaxRate
+    Json toJson newTaxRate.id
   }
 
-  def update(jsTaxRate: JsValue) = {
-    val newTaxRate: TaxRate = new TaxRate((jsTaxRate \ "id").as[Long], (jsTaxRate \ "description").as[String], (jsTaxRate \ "amount").as[Long])
-    newTaxRate update()
-    Json toJson newTaxRate
-  }
+  def update(jsTaxRate: JsValue) = jsTaxRate.as(TaxRate.idlessReader) update()
 
 
-  def delete(id: Long) = {
-    val tax: TaxRate = taxRate(id)
-    tax delete()
-    tax
-  }
+  def delete(id: L) = taxRate(id) delete()
 }

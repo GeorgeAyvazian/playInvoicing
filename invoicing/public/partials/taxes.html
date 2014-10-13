@@ -8,8 +8,8 @@
     </tr>
     </thead>
     <tr ng-repeat="taxRate in taxRates">
-        <td contenteditable="true" ng-model="description">{{taxRate.description}}</td>
-        <td contenteditable="true" ng-model="amount">{{taxRate.amount}}</td>
+        <td contenteditable ng-model="description">{{taxRate.description}}</td>
+        <td contenteditable format="Number" ng-model="amount">{{taxRate.amount}}</td>
         <td><a href="#" class="close" ng-click="deleteTaxRate(taxRate.id)">&times;</a></td>
     </tr>
 </table>

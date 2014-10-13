@@ -1,5 +1,7 @@
 package controllers
 
+import java.io.File
+
 import play.api.mvc.{Action, Controller}
 
 object Application extends Controller {
@@ -21,5 +23,12 @@ object Application extends Controller {
       case true => Ok(scala.io.Source.fromFile(file.getCanonicalPath).mkString) as "text/html"
       case _ => NotFound
     }
+  }
+
+  def getPdf = Action {
+    Ok.sendFile(
+      content = new File("/home/george/books/algorithms.pdf"),
+      inline = true
+    )
   }
 }

@@ -11,22 +11,22 @@ import scala.annotation.meta.field
 
 @Entity
 @Table(name = "products")
-case class Product(@(Id@field)
-                   @(GeneratedValue@field) id: Long,
-                   @(Column@field) @(NotNull@field) description: String = "",
-                   @(Column@field)(name = "unitprice") unitPrice: Long = -1L,
-                   @(ManyToOne@field)(cascade = Array(CascadeType.PERSIST, CascadeType.MERGE)) @(JoinColumn@field)(name = "tax_id", referencedColumnName = "id") @(NotNull@field) tax: TaxRate
+case class Product(
+                    @(Id@field)
+                    @(GeneratedValue@field) id: Long = null.asInstanceOf[Long],
+                    @(Column@field) @(NotNull@field) description: String = "",
+                    @(Column@field)(name = "unitprice") unitPrice: Long = 0L,
+                    @(ManyToOne@field)(cascade = Array(CascadeType.PERSIST, CascadeType.MERGE)) @(JoinColumn@field)(name = "tax_id", referencedColumnName = "id") @(NotNull@field) tax: TaxRate = new TaxRate()
                     )
-  extends Model {
-  def this(description: String, taxRateId: Option[Long], taxRate: Option[TaxRate]) = this(null.asInstanceOf[Long], description, -1L, taxRate getOrElse (TaxRate taxRate taxRateId.getOrElse(-1L)))
-}
+  extends Model {}
 
 object Product {
   implicit val writer = Json.writes[Product]
+  implicit val reader = Json.reads[Product]
   private val finder = new Finder(classOf[Long], classOf[Product])
 
   def create(jsProduct: JsValue): Long = {
-    val newProduct: Product = new Product((jsProduct \ "description").as[String], (jsProduct \ "taxRate" \ "id").asOpt[Long], (jsProduct \ "taxRate").asOpt[TaxRate])
+    val newProduct: Product = jsProduct.as[Product]
     newProduct save()
     newProduct.id
   }

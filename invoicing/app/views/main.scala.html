@@ -10,6 +10,7 @@
         <title>inVoice!</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/ng-grid.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
         <script src='@routes.Assets.at("javascripts/jquery-1.9.0.min.js")'></script>
         <script src='@routes.Assets.at("javascripts/bootstrap.min.js")'></script>
@@ -17,13 +18,14 @@
         <script src='@routes.Assets.at("javascripts/angular-route.js")'></script>
         <script src='@routes.Assets.at("javascripts/angular-resource.js")'></script>
         <script src='@routes.Assets.at("javascripts/ui-bootstrap-tpls-0.11.2.js")'></script>
+        <script src='@routes.Assets.at("javascripts/ng-grid.debug.js")'></script>
         <script src='@routes.Assets.at("javascripts/app.js")'></script>
         <script src='@routes.Assets.at("javascripts/controllers.js")'></script>
         <script src='@routes.Assets.at("javascripts/services.js")'></script>
         <script src='@routes.Assets.at("javascripts/directives.js")'></script>
     </head>
     <body>
-        <nav class="navbar navbar-default" role="navigation">
+        <nav class="navbar navbar-default navbar-fixed-top navs" role="navigation">
             <div class="container-fluid">
                     <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -38,22 +40,6 @@
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Link</a></li>
-                        <li><a href="#">Link</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">Separated link</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">One more separated link</a></li>
-                            </ul>
-                        </li>
-                    </ul>
                     <form class="navbar-form navbar-left" role="search">
                         <div class="form-group">
                             <input type="text" typeahead-loading="loadingLocations" class="form-control" placeholder="Search Everything" ng-model="some" typeahead="item for item in getItem($viewValue)">
@@ -61,24 +47,29 @@
                         </div>
                     </form>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="#">Send</a></li>
-                        <li><a href="#">Save</a></li>
-                        <li><a href="#">Preview</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li class="divider"></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
-                        </li>
+                        <li><button class="btn btn-success">Send</button></li>
+                        <li class="divider-vertical"></li>
+                        <li><button class="btn btn-primary" ng-click="getPdf()">Save</button></li>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
-        <div data-ng-view="view">
+        <div class="row">
+            <div class="col-md-2 navs">
+                <ul class="nav nav-stacked">
+                    <li><a href="#">Invoices</a></li>
+                    <li><a href="#">Reports</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </div>
+            <div class="col-md-7" data-ng-view="view">
+            </div>
+            <div ng-controller="TaxCtrl">
+                <div class="col-md-3 navs gridStyle" ng-grid="gridOptions"></div>
+            </div>
+            <div ng-controller="ProductCtrl">
+                <div class="col-md-3 navs gridStyle" ng-grid="gridOptions"></div>
+            </div>
         </div>
     </body>
 </html>
