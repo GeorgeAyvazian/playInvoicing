@@ -3,17 +3,15 @@ GET           /pdf                                              controllers.Appl
 
 GET           /views/*any                                       controllers.Application.loadPublicHTML(any)
 
-GET           /api/products                                     controllers.ProductController.all
-POST          /api/products/new                                 controllers.ProductController.create
-DELETE        /api/products/:id                                 controllers.ProductController.delete(id: String)
+GET           /api/products                                     controllers.Products.all
+POST          /api/products/new                                 controllers.Products.create
+DELETE        /api/products/:id                                 controllers.Products.delete(id: Long)
 
-GET           /api/taxes                                        controllers.TaxController.all
-GET           /api/taxes/:id                                    controllers.TaxController.find(id: String)
-PUT           /api/taxes                                        controllers.TaxController.update
-POST          /api/taxes                                        controllers.TaxController.create
-DELETE        /api/taxes/:id                                    controllers.TaxController.delete(id: Long)
-
-GET           /api/lineitems/create                             controllers.InvoiceController.newLineItem
+GET           /api/taxes                                        controllers.Taxes.all
+GET           /api/taxes/:term                                  controllers.Taxes.find(term: String, fields: String)
+PUT           /api/taxes                                        controllers.Taxes.update
+POST          /api/taxes                                        controllers.Taxes.create
+DELETE        /api/taxes/:id                                    controllers.Taxes.delete(id: Long)
 
 GET           /assets/img/glyphicons-halflings.png              controllers.Assets.at(path="/public", file="/images/glyphicons-halflings.png")
 GET           /assets/img/glyphicons-halflings-white.png        controllers.Assets.at(path="/public", file="/images/glyphicons-halflings-white.png")

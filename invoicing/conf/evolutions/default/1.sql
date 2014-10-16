@@ -21,7 +21,7 @@ create table line_items (
 create table products (
   id                        bigint not null,
   description               varchar(255) not null,
-  unitprice                 bigint,
+  unit_price                bigint,
   tax_id                    bigint not null,
   constraint pk_products primary key (id))
 ;

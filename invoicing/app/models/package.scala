@@ -3,10 +3,11 @@ import java.lang.{Long => L}
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 
-
 package object models {
 
-  implicit  object LReads extends Reads[L] {
+  type L = java.lang.Long
+
+  implicit object LReads extends Reads[L] {
     def reads(json: JsValue) = json match {
       case JsNull => JsSuccess(null.asInstanceOf[L])
       case JsNumber(n) => JsSuccess(n.asInstanceOf[L])

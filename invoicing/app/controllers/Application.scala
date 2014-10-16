@@ -26,7 +26,7 @@ object Application extends Controller {
   }
 
   def getPdf = Action {
-    Ok.sendFile(
+    Ok sendFile(
       content = new File("/home/george/books/algorithms.pdf"),
       inline = true
     )

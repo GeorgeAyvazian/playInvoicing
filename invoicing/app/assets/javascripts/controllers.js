@@ -9,7 +9,7 @@ controllers.controller('AppCtrl', ['$scope', '$resource', '$routeParams', '$http
     };
     $scope.getItem = function search() {
         return $resource(apiUrl + '/taxes/:id')
-            .query({id: $scope.searchTerm})
+            .query({id: $scope.searchTerm}, {fields: 'description'})
             .$promise
             .then(function (result) {
                 return result.map(function (r) {
