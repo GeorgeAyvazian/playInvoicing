@@ -5,7 +5,7 @@ INSERT INTO tax_rates (id, description, amount) VALUES
   (4, 'Sales Tax', 10),
   (5, 'VAT', 10);
 
-INSERT INTO products (id, description, unitprice, tax_id) VALUES
+INSERT INTO products (id, description, unit_price, tax_id) VALUES
   (1, 'Accomodation', 1255, 1),
   (2, 'Accounting Services', 140, 1),
   (3, 'Hourly Charge', 150, 1);

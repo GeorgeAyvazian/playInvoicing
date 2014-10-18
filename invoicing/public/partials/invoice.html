@@ -57,7 +57,7 @@
             </tr>
             </thead>
             <tr ng-repeat="lineItem in lineItems">
-                <td contenteditable></td>
+                <td contenteditable ng-model="searchTerm" ng-keyup="getItem($event, 'products', 'description')"></td>
                 <td class="col-md-1">
                     <input type="number" ng-blur="addLineItem()" ng-change="calculateAmount(lineItem)" ng-model="lineItem.quantity" class="form-control text-center col-md-1" />
                 </td>

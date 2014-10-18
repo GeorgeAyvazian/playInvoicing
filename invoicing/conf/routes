@@ -4,6 +4,7 @@ GET           /pdf                                              controllers.Appl
 GET           /views/*any                                       controllers.Application.loadPublicHTML(any)
 
 GET           /api/products                                     controllers.Products.all
+GET           /api/products/:term                               controllers.Products.find(term: String, fields: String)
 POST          /api/products/new                                 controllers.Products.create
 DELETE        /api/products/:id                                 controllers.Products.delete(id: Long)
 

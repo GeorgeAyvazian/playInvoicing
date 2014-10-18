@@ -15,8 +15,7 @@ object Taxes extends Controller {
 
   def find(term: String, fields: String) = Action(parse.empty) { r =>
     val where: ExpressionList[TaxRate] = finder.where()
-    fields.split(",").foreach(where.icontains(_, term))
-    Ok((Json arr i(where findList())).value.head)
+    fields.split(",").foreach(where.icontains(_, term)) and Ok((Json arr i(where findList())).value.head)
   }
 
   def create() = Action(parse.json) { r =>
@@ -38,8 +37,7 @@ object Products extends Controller {
 
   def find(term: String, fields: String*) = Action(parse.empty) { r =>
     val where: ExpressionList[Product] = finder.where()
-    fields.foreach(where.icontains(_, term))
-    Ok((Json arr i(where findList())).value.head)
+    fields.foreach(where.icontains(_, term)) and Ok((Json arr i(where findList())).value.head)
   }
 
   def create() = Action(parse.json) { r =>

@@ -7,9 +7,9 @@ controllers.controller('AppCtrl', ['$scope', '$resource', '$routeParams', '$http
     $scope.getPdf = function () {
         window.open('/pdf', '_blank', '');
     };
-    $scope.getItem = function search() {
-        return $resource(apiUrl + '/taxes/:id')
-            .query({id: $scope.searchTerm}, {fields: 'description'})
+    $scope.getItem = function search($event, resource, field) {
+        return $resource(apiUrl + '/' + resource + '/:term', {term: '@term'})
+            .query({fields: field}, {term: $event.currentTarget.innerHTML})
             .$promise
             .then(function (result) {
                 return result.map(function (r) {
@@ -17,6 +17,7 @@ controllers.controller('AppCtrl', ['$scope', '$resource', '$routeParams', '$http
                 });
             });
     };
+    $scope.isCollapsed = false;
 }]);
 
 controllers.controller('TaxCtrl', ['$scope', '$resource', '$routeParams', '$http', 'apiUrl', 'TaxRateService', function ($scope, $resource, $routeParams, $http, apiUrl) {
