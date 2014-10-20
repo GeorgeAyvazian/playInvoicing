@@ -21,7 +21,7 @@ package object controllers {
 
   implicit class any(v: Any) { implicit def and[E](ret: E) = ret }
 
-  def AuthenticatedAction(f: Request[AnyContent] => Result): Action[AnyContent] = Action { r =>
+  def AuthenticatedAction(f: Request[AnyContent] => Result) = Action { r =>
     val session = r.session + ("user" → "george_a@fastmail.fm")
     session.get("user") match {
       case Some(x) => f(r).withSession("user" → "george_a@fastmail.fm")
