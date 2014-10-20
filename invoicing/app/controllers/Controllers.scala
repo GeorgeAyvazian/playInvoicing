@@ -18,14 +18,14 @@ object Taxes extends Controller {
     fields.split(",").foreach(where.icontains(_, term)) and Ok((Json arr i(where findList())).value.head)
   }
 
-  def create() = Action(parse.json) { r =>
+  def create = Action(parse.json) { r =>
     val tr = r.body.as[TaxRate]
     tr save() and Ok(Json toJson tr)
   }
 
   def delete(id: Long) = Action(parse.empty) { r => finder byId id delete() and Ok }
 
-  def update() = Action(parse.json) { r => r.body.as[TaxRate] update() and Ok }
+  def update = Action(parse.json) { r => r.body.as[TaxRate] update() and Ok }
 
 }
 
@@ -40,13 +40,13 @@ object Products extends Controller {
     fields.foreach(where.icontains(_, term)) and Ok((Json arr i(where findList())).value.head)
   }
 
-  def create() = Action(parse.json) { r =>
+  def create = Action(parse.json) { r =>
     val p = r.body.as[Product]
     p save() and Ok(Json toJson p)
   }
 
   def delete(id: Long) = Action(parse.empty) { r => finder byId id delete() and Ok }
 
-  def update() = Action(parse.json) { r => r.body.as[Product] update() and Ok }
+  def update = Action(parse.json) { r => r.body.as[Product] update() and Ok }
 
 }
