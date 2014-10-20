@@ -14,6 +14,8 @@ INSERT INTO invoices (id, number) VALUES
   (1, '1'),
   (2, '2');
 
+INSERT INTO users (id, email, password) VALUES
+  (1, 'admin@admin', 'pass');
 
 INSERT INTO line_items (id, product_id, quantity, amount, invoice_id) VALUES (1, 1, 2, 10, 1);
 

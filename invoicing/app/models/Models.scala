@@ -11,6 +11,21 @@ import play.db.ebean.Model
 import scala.annotation.meta.field
 
 @Entity
+@Table(name = "users")
+case class User(@(Id@field)
+                @(GeneratedValue@field)
+                id: L = null,
+                @(NotNull@field)
+                email: String,
+                @(NotNull@field)
+                password: String) extends Model {}
+
+object User {
+  implicit val reader = reads[User]
+  implicit val writer = writes[User]
+}
+
+@Entity
 @Table(name = "tax_rates")
 case class TaxRate(
                     @(Id@field)
