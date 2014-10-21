@@ -4,6 +4,7 @@ version := "1.0"
 
 libraryDependencies := Seq[ModuleID](
   jdbc,
+  cache,
   javaEbean.exclude("org.hibernate.javax.persistence", "hibernate-jpa-2.0-api"),
   javaJpa.exclude("org.hibernate.javax.persistence", "hibernate-jpa-2.0-api"),
   "postgresql" % "postgresql" % "9.1-901.jdbc4",

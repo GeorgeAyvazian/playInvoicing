@@ -6,6 +6,7 @@ import play.api.mvc._
 package object controllers {
 
   type L = java.lang.Long
+  type jList[R] = java.util.List[R]
 
   implicit object LReads extends Reads[L] {
     def reads(json: JsValue) = json match {
@@ -25,7 +26,7 @@ package object controllers {
     val session = r.session + ("user" → "george_a@fastmail.fm")
     session.get("user") match {
       case Some(x) => f(r).withSession("user" → "george_a@fastmail.fm")
-      case _ => Redirect(routes.Application.login)
+      case _ => Redirect(routes.Application.main("invoice"))
     }
   }
 }
