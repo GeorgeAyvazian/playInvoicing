@@ -14,6 +14,7 @@ import scala.annotation.meta.field
 @Table(name = "users")
 case class User(@(Id@field)
                 @(GeneratedValue@field)
+                (strategy = GenerationType.IDENTITY)
                 id: L = null,
                 @(NotNull@field)
                 email: String,
@@ -30,6 +31,7 @@ object User {
 case class TaxRate(
                     @(Id@field)
                     @(GeneratedValue@field)
+                    (strategy = GenerationType.IDENTITY)
                     id: L = null,
                     description: String = "",
                     @(NotNull@field)
@@ -54,6 +56,7 @@ object TaxRate {
 case class Invoice(
                     @(Id@field)
                     @(GeneratedValue@field)
+                    (strategy = GenerationType.IDENTITY)
                     id: L = null,
                     number: String = ""
                     ) extends Model {
@@ -72,6 +75,7 @@ object Invoice {
 case class Product(
                     @(Id@field)
                     @(GeneratedValue@field)
+                    (strategy = GenerationType.IDENTITY)
                     id: L = null,
                     @(NotNull@field)
                     description: String = "",
@@ -93,6 +97,7 @@ object Product {
 case class LineItem(
                      @(Id@field)
                      @(GeneratedValue@field)
+                     (strategy = GenerationType.IDENTITY)
                      id: L = null,
                      @(ManyToOne@field)
                      @(JoinColumn@field)(name = "product_id", referencedColumnName = "id")
