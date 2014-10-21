@@ -36,6 +36,10 @@ controllers.controller('TaxCtrl', ['$scope', '$resource', '$routeParams', '$http
                 field: 'amount',
                 displayName: 'Amount',
                 editableCellTemplate: "<input type='number' ng-class=\"'colt' + col.index\" ng-input=\"COL_FIELD\" ng-model=\"COL_FIELD\" ng-change=\"updateTaxRate(row.entity)\"/>"
+            },
+            {
+                displayName: 'Remove',
+                editableCellTemplate: "<button type='button' class='btn btn-primary' ng-click='window.console.log(row)'>&times;</button>"
             }
         ],
         enableCellSelection: true,
