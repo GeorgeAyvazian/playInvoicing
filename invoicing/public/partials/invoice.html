@@ -37,7 +37,12 @@
         <div class="row">
             <span class="col-md-offset-2 col-md-2" contenteditable>Address 2</span>
             <span class="col-md-offset-4 col-md-1 text-right">Date</span>
-            <span class="col-md-2 text-left" contenteditable>{{today}}</span>
+            <p class="input-group">
+                <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
         </div>
         <div class="row">
             <span class="col-md-offset-2 col-md-2" contenteditable>City, State, Zip</span>
