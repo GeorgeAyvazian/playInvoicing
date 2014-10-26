@@ -3,7 +3,6 @@ var controllers = angular.module('controllers', []);
 
 controllers.controller('AppCtrl', ['$scope', '$resource', '$routeParams', '$http', 'apiUrl', function ($scope, $resource, $routeParams, $http, apiUrl) {
     'use strict';
-    $scope.searchTerm = '';
     $scope.getPdf = function () {
         window.open('/pdf', '_blank', '');
     };
@@ -125,21 +124,44 @@ controllers.controller('InvoiceCtrl', ['$scope', '$resource', '$routeParams', '$
         startingDay: 1
     };
 
+    $scope.saveInvoice = function (invoice) {
+        $resource(apiUrl + '/invoices')
+            .save(invoice)
+            .$promise
+            .then(function (result) {
+            });
+
+    };
+
     $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
     $scope.format = $scope.formats[0];
-    $resource(apiUrl + '/lineitems/create')
+    $scope.invoice = {};
+    $resource(apiUrl + '/lineitems/createEmptyInvoice')
         .get()
         .$promise
         .then(function (result) {
-            var clone = function clone(obj) {
-                var cloneVal = {};
-                Object.keys(obj).map(function (key) {
-                    cloneVal[key] = 'object' === typeof obj[key] ? clone(obj[key]) : obj[key];
+            $scope.invoice = result;
+            $resource(apiUrl + '/lineitems/createEmpty')
+                .get()
+                .$promise
+                .then(function (result) {
+                    var clone = function clone(obj) {
+                        var cloneVal = {};
+                        Object.keys(obj).map(function (key) {
+                            cloneVal[key] = obj[key] && 'object' === typeof obj[key] ? clone(obj[key]) : obj[key];
+                        });
+                        return cloneVal;
+                    };
+                    $scope.LineItem.prototype = clone(result);
+                    $scope.invoice.lineItems.push(result);
+                    $scope.invoice.lineItems.push(clone(result));
+                    $scope.$watch('invoice.lineItems', function () {
+                        $scope.invoice.total = 0;
+                        $scope.invoice.lineItems.forEach(function (e) {
+                            $scope.invoice.total += e.amount;
+                        });
+                    }, true);
                 });
-                return cloneVal;
-            };
-            $scope.LineItem.prototype = clone(result);
-            $scope.lineItems.push(result);
         });
 
     $scope.addLineItem = function () {
@@ -147,13 +169,22 @@ controllers.controller('InvoiceCtrl', ['$scope', '$resource', '$routeParams', '$
     };
 
     $scope.removeLineItem = function (lineItem) {
-        1 < $scope.lineItems.length && $scope.lineItems.splice($scope.lineItems.indexOf(lineItem), 1);
+        1 < $scope.invoice.lineItems.length && $scope.invoice.lineItems.splice($scope.invoice.lineItems.indexOf(lineItem), 1);
     };
 
     $scope.calculateAmount = function calcAmount(lineItem) {
         var amount = lineItem.quantity * lineItem.product.unitPrice,
             taxAmount = (lineItem.product.tax.amount / 100).toPrecision(2) * amount;
         lineItem.amount = amount + taxAmount;
+    };
+
+    $scope.findProduct = function search(searchTerm, resource, field) {
+        return $resource(apiUrl + '/' + resource + '/:term', {term: '@term'})
+            .query({fields: field}, {term: searchTerm})
+            .$promise
+            .then(function (result) {
+                return result;
+            });
     };
 }]);
 

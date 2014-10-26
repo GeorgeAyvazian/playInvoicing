@@ -70,3 +70,74 @@ object Products extends Controller {
     getAs[jList[Product]]("products").getOrElse[jList[Product]](refreshCache)
   }
 }
+
+object LineItems extends Controller {
+
+  private lazy val finder = new Finder(classOf[L], classOf[LineItem])
+  private lazy val CACHE_KEY = "lineItems"
+
+  def all = Action { Ok(arr(i(fromCache)).value head) }
+
+  def find(term: String, fields: String) = Action(parse empty) { r =>
+    Ok(arr(i(fromCache).filter(li => true)).value head)
+  }
+
+  def create = Action(parse json) { r =>
+    val p = r.body.as[LineItem]
+    refreshCache and p save() and Ok(toJson(p))
+  }
+
+  def createEmpty = Action { Ok(toJson(new LineItem())) }
+
+  def createEmptyInvoice = Action { Ok(toJson(new Invoice())) }
+
+  def delete(id: Long) = Action(parse empty) { r => finder byId id delete() and refreshCache and Ok }
+
+  def update = Action(parse json) { r => r.body.as[LineItem] update() and refreshCache and Ok }
+
+  private def refreshCache = {
+    import play.api.Play.current
+    val lineItems = finder all()
+    set(CACHE_KEY, lineItems) and lineItems
+  }
+
+  private def fromCache = {
+    import play.api.Play.current
+    getAs[jList[LineItem]](CACHE_KEY).getOrElse[jList[LineItem]](refreshCache)
+  }
+}
+object Invoices extends Controller {
+
+  private lazy val finder = new Finder(classOf[L], classOf[Invoice])
+  private lazy val CACHE_KEY = "invoices"
+
+  def all = Action { Ok(arr(i(fromCache)).value head) }
+
+  def find(term: String, fields: String) = Action(parse empty) { r =>
+    Ok(arr(i(fromCache).filter(li => true)).value head)
+  }
+
+  def create = Action(parse json) { r =>
+    val p = r.body.as[Invoice]
+    refreshCache and p save() and Ok(toJson(p))
+  }
+
+  def createEmpty = Action { Ok(toJson(new Invoice())) }
+
+  def createEmptyInvoice = Action { Ok(toJson(new Invoice())) }
+
+  def delete(id: Long) = Action(parse empty) { r => finder byId id delete() and refreshCache and Ok }
+
+  def update = Action(parse json) { r => r.body.as[Invoice] update() and refreshCache and Ok }
+
+  private def refreshCache = {
+    import play.api.Play.current
+    val invoices = finder all()
+    set(CACHE_KEY, invoices) and invoices
+  }
+
+  private def fromCache = {
+    import play.api.Play.current
+    getAs[jList[Invoice]](CACHE_KEY).getOrElse[jList[Invoice]](refreshCache)
+  }
+}

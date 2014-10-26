@@ -14,6 +14,16 @@ PUT           /api/taxes                                        controllers.Taxe
 POST          /api/taxes                                        controllers.Taxes.create
 DELETE        /api/taxes/:id                                    controllers.Taxes.delete(id: Long)
 
+POST          /api/invoices                                     controllers.Invoices.create
+
+GET           /api/lineitems                                    controllers.LineItems.all
+GET           /api/lineitems/createEmpty                        controllers.LineItems.createEmpty
+GET           /api/lineitems/createEmptyInvoice                 controllers.LineItems.createEmptyInvoice
+GET           /api/lineitems/:term                              controllers.LineItems.find(term: String, fields: String)
+PUT           /api/lineitems                                    controllers.LineItems.update
+POST          /api/lineitems                                    controllers.LineItems.create
+DELETE        /api/lineitems/:id                                controllers.LineItems.delete(id: Long)
+
 GET           /assets/img/glyphicons-halflings.png              controllers.Assets.at(path="/public", file="/images/glyphicons-halflings.png")
 GET           /assets/img/glyphicons-halflings-white.png        controllers.Assets.at(path="/public", file="/images/glyphicons-halflings-white.png")
 GET           /assets/*file                                     controllers.Assets.at(path = "/public", file)

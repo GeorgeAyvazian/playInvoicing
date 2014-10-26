@@ -4,7 +4,7 @@ import java.util
 import javax.persistence._
 import javax.validation.constraints.NotNull
 
-import play.api.libs.json.Json.{reads, writes}
+import play.api.libs.json.Json._
 import play.api.libs.json._
 import play.db.ebean.Model
 
@@ -48,7 +48,13 @@ object TaxRate {
       (__ \ 'amount).read[Long])((i, d, a) => {
     TaxRate.apply(i.orNull, d, a)
   })
-  implicit val writer = writes[TaxRate]
+  implicit val writer = new Writes[TaxRate] {
+    override def writes(o: TaxRate): JsValue = JsObject(Seq(
+      ("id", if (o.id == null) JsNull else JsNumber(o.id.longValue())),
+      ("description", JsString(Option(o.description).getOrElse(""))),
+      ("amount", JsNumber(o.amount))
+    ))
+  }
 }
 
 @Entity
@@ -58,15 +64,22 @@ case class Invoice(
                     @(GeneratedValue@field)
                     (strategy = GenerationType.IDENTITY)
                     id: L = null,
-                    number: String = ""
-                    ) extends Model {
-  @OneToMany
-  var lineItems: util.List[LineItem] = new util.ArrayList[LineItem]()
-}
-
+                    number: String = "",
+                    total: L = 0L,
+                    @(OneToMany@field)(cascade = Array(CascadeType.PERSIST, CascadeType.MERGE))
+                    @(NotNull@field) lineItems: java.util.List[LineItem] = new util.ArrayList[LineItem]()
+                    ) extends Model {}
 
 object Invoice {
-  implicit val reader = reads[Invoice]
+  import play.api.libs.functional.syntax._
+
+  implicit val reader = (
+    (__ \ 'id).readNullable[L] and
+      (__ \ 'number).read[String] and
+      (__ \ 'total).read[Long] and
+      (__ \ 'lineItems).read[java.util.List[LineItem]]) ((i, d, a, l) => {
+    Invoice.apply(i.orNull, d, a, l)
+  })
   implicit val writer = writes[Invoice]
 }
 
@@ -88,8 +101,15 @@ case class Product(
                     ) extends Model {}
 
 object Product {
-  implicit val writer = writes[Product]
-  implicit val reader = reads[Product]
+  implicit lazy val writer = new Writes[Product] {
+    override def writes(o: Product): JsValue = JsObject(Seq(
+      ("id", if (o.id == null) JsNull else JsNumber(o.id.longValue())),
+      ("description", JsString(Option(o.description).getOrElse(""))),
+      ("unitPrice", JsNumber(o.unitPrice)),
+      ("taxRate", Json toJson Option(o.tax).getOrElse(new TaxRate()))
+    ))
+  }
+  implicit lazy val reader = reads[Product]
 }
 
 @Entity
@@ -105,12 +125,22 @@ case class LineItem(
                      product: Product = new Product(),
                      quantity: Int = 0,
                      amount: Long = 0L
-                     ) extends Model {
-  @ManyToOne var invoice: Invoice = _
-}
+                     ) extends Model {}
 
 object LineItem {
   implicit val reader = reads[LineItem]
   implicit val writer = writes[LineItem]
+  import scala.collection.JavaConverters._
+  implicit def lineItemListWriter:Writes[java.util.List[LineItem]] = new Writes[java.util.List[LineItem]] {
+    def writes(as: java.util.List[LineItem]) = JsArray(as.asScala.map(toJson(_)).toSeq)
+  }
+
+  implicit def lineItemListReader:Reads[java.util.List[LineItem]] = new Reads[java.util.List[LineItem]] {
+    def reads(json: JsValue)  = json match {
+      case JsArray(ts) =>
+        import scala.collection.JavaConverters._
+        JsSuccess (ts.map(t => fromJson[LineItem](t)).map(j => j.get).asJava)
+    }
+  }
 }
 

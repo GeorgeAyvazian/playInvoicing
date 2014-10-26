@@ -29,7 +29,7 @@
             <span class="col-md-2 text-right">Bill To</span>
             <span class="col-md-2" contenteditable>Name</span>
             <span class="col-md-offset-4 col-md-1 text-right">Invoice #</span>
-            <span class="col-md-1 text-left" contenteditable>1111</span>
+            <span class="col-md-1 text-left" contenteditable ng-model="invoice.number">{{invoice.number || 1}}</span>
         </div>
         <div class="row">
             <span class="col-md-offset-2 col-md-2" contenteditable>Address 1</span>
@@ -61,14 +61,17 @@
                 <td class="col-md-1 text-right">&nbsp;</td>
             </tr>
             </thead>
-            <tr ng-repeat="lineItem in lineItems">
-                <td contenteditable ng-model="searchTerm" ng-keyup="getItem($event, 'products', 'description')"></td>
-                <td class="col-md-1">
-                    <input type="number" ng-blur="addLineItem()" ng-change="calculateAmount(lineItem)" ng-model="lineItem.quantity" class="form-control text-center col-md-1" />
+            <tr ng-repeat="lineItem in invoice.lineItems">
+                <td>
+                    <input type="text" typeahead-editable="false" typeahead-loading="loadingLocations" class="form-control" placeholder="Search Products" ng-model="lineItem.product" typeahead="product as product.description for product in findProduct($viewValue, 'products', 'description')" />
+                    <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
                 </td>
-                <td class="col-md-1 text-right">{{lineItem.product.unitPrice}}</td>
+                <td class="col-md-1">
+                    <input type="number" ng-blur="addLineItem()" ng-value="lineItem.quantity" value="{{lineItem.quantity}}" ng-change="calculateAmount(lineItem)" ng-model="lineItem.quantity" class="form-control text-center col-md-1" />
+                </td>
+                <td class="col-md-1 text-right" contenteditable ng-model="lineItem.product.unitPrice">{{lineItem.product.unitPrice}}</td>
                 <td class="col-md-2 text-right">
-                    <select   ng-change="calculateAmount(lineItem)" ng-model="lineItem.product.tax" ng-options="taxRate.description + ' (' + taxRate.amount + '%)'  for taxRate in taxRates"> </select>
+                    <select ng-change="calculateAmount(lineItem)" ng-model="lineItem.product.tax" ng-options="taxRate as taxRate.description + ' (' + taxRate.amount + '%)' for taxRate in taxRates"> </select>
                 </td>
                 <td class="col-md-1 text-right" contenteditable ng-model="lineItem.amount" format="Number">
                     {{lineItem.amount}}
@@ -81,16 +84,11 @@
             </tr>
         </table>
         <div class="row">
-            <span class="col-md-offset-9 col-md-1 text-right">Subtotal</span>
-            <span class="col-md-1  text-right">$234</span>
-        </div>
-        <div class="row">
-            <span class="col-md-offset-9 col-md-1 text-right">Tax</span>
-            <span class="col-md-1  text-right">$234</span>
-        </div>
-        <div class="row">
             <span class="col-md-offset-9 col-md-1 text-right">Total</span>
-            <span class="col-md-1  text-right">$234</span>
+            <span class="col-md-1 text-right">{{invoice.total}}</span>
+        </div>
+        <div class="row">
+            <button ng-click="saveInvoice(invoice)">submit</button>
         </div>
     </div>
 </div>

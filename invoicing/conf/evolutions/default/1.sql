@@ -6,15 +6,16 @@
 create table invoices (
   id                        bigint not null,
   number                    varchar(255),
+  total                     bigint,
   constraint pk_invoices primary key (id))
 ;
 
 create table line_items (
   id                        bigint not null,
+  invoice_id                bigint not null,
   product_id                bigint not null,
   quantity                  integer,
   amount                    bigint,
-  invoice_id                bigint,
   constraint pk_line_items primary key (id))
 ;
 
@@ -50,10 +51,10 @@ create sequence tax_rates_seq;
 
 create sequence users_seq;
 
-alter table line_items add constraint fk_line_items_product_1 foreign key (product_id) references products (id);
-create index ix_line_items_product_1 on line_items (product_id);
-alter table line_items add constraint fk_line_items_invoice_2 foreign key (invoice_id) references invoices (id);
-create index ix_line_items_invoice_2 on line_items (invoice_id);
+alter table line_items add constraint fk_line_items_invoices_1 foreign key (invoice_id) references invoices (id);
+create index ix_line_items_invoices_1 on line_items (invoice_id);
+alter table line_items add constraint fk_line_items_product_2 foreign key (product_id) references products (id);
+create index ix_line_items_product_2 on line_items (product_id);
 alter table products add constraint fk_products_tax_3 foreign key (tax_id) references tax_rates (id);
 create index ix_products_tax_3 on products (tax_id);
 
