@@ -1,6 +1,25 @@
 //noinspection JSHint,JSUnresolvedVariable,JSLint
 var controllers = angular.module('controllers', []);
 
+function TaxRate() {
+    'use strict';
+    this.amount = 0;
+}
+
+function Product() {
+    'use strict';
+    this.unitPrice = 0;
+    this.tax = new TaxRate();
+}
+
+function LineItem() {
+    'use strict';
+    this.quantity = 0;
+    this.amount = 0;
+    this.product = new Product();
+    this.description = '';
+}
+
 controllers.controller('AppCtrl', ['$scope', '$resource', '$routeParams', '$http', 'apiUrl', function ($scope, $resource, $routeParams, $http, apiUrl) {
     'use strict';
     $scope.getPdf = function () {
@@ -11,9 +30,16 @@ controllers.controller('AppCtrl', ['$scope', '$resource', '$routeParams', '$http
             .query({fields: field}, {term: $event.currentTarget.innerHTML})
             .$promise
             .then(function (result) {
-                return result.map(function (r) {
-                    return r.description;
-                });
+                return result.map(
+                    /**
+                     *
+                     * @param {LineItem} lineItem
+                     * @returns {string}
+                     */
+                    function (lineItem) {
+                        return lineItem.description;
+                    }
+                );
             });
     };
     $scope.isCollapsed = false;
@@ -53,7 +79,7 @@ controllers.controller('TaxCtrl', ['$scope', '$resource', '$routeParams', '$http
             $scope.taxRates = result;
         });
 
-    $scope.createNewTaxRate = function (isValid) {
+    $scope.createNewTaxRate = function () {
         $resource(apiUrl + '/taxes')
             .save($scope.taxRate)
             .$promise
@@ -80,20 +106,21 @@ controllers.controller('TaxCtrl', ['$scope', '$resource', '$routeParams', '$http
 
 controllers.controller('InvoiceCtrl', ['$scope', '$resource', '$routeParams', '$http', 'apiUrl', function ($scope, $resource, $routeParams, $http, apiUrl) {
     'use strict';
-    $scope.LineItem = function LineItemConstructor() {
-    };
+    $scope.LineItem = LineItem;
     $scope.lineItems = [];
     $scope.taxRates = [];
     $scope.getTaxRates = function () {
         $resource(apiUrl + '/taxes', {}, {
             query: {method: 'GET', isArray: true}
-        }).query().$promise.then(function (result) {
+        }).query()
+            .$promise
+            .then(function (result) {
                 $scope.taxRates = result;
             });
     };
     $scope.getTaxRates();
 
-    $scope.today = function() {
+    $scope.today = function () {
         $scope.dt = new Date();
     };
     $scope.today();
@@ -103,16 +130,16 @@ controllers.controller('InvoiceCtrl', ['$scope', '$resource', '$routeParams', '$
     };
 
     // Disable weekend selection
-    $scope.disabled = function(date, mode) {
-        return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+    $scope.disabled = function (date, mode) {
+        return ('day' === mode && (0 === date.getDay() || 6 === date.getDay()));
     };
 
-    $scope.toggleMin = function() {
+    $scope.toggleMin = function () {
         $scope.minDate = $scope.minDate ? null : new Date();
     };
     $scope.toggleMin();
 
-    $scope.open = function($event) {
+    $scope.open = function ($event) {
         $event.preventDefault();
         $event.stopPropagation();
 
@@ -165,13 +192,19 @@ controllers.controller('InvoiceCtrl', ['$scope', '$resource', '$routeParams', '$
         });
 
     $scope.addLineItem = function () {
-        $scope.lineItems.push(new $scope.LineItem());
+        $scope.lineItems.push(new LineItem());
     };
 
     $scope.removeLineItem = function (lineItem) {
-        1 < $scope.invoice.lineItems.length && $scope.invoice.lineItems.splice($scope.invoice.lineItems.indexOf(lineItem), 1);
+        if (1 < $scope.invoice.lineItems.length) {
+            $scope.invoice.lineItems.splice($scope.invoice.lineItems.indexOf(lineItem), 1);
+        }
     };
 
+    /**
+     *
+     * @param {LineItem} lineItem
+     */
     $scope.calculateAmount = function calcAmount(lineItem) {
         var amount = lineItem.quantity * lineItem.product.unitPrice,
             taxAmount = (lineItem.product.tax.amount / 100).toPrecision(2) * amount;

@@ -7,7 +7,7 @@ var app = angular.module('app', [
     'controllers',
     'TaxRateService'
 ])
-    .constant('apiUrl', 'http://deepthought2:9000/api')
+    .constant('apiUrl', 'http://192.168.11.117:9000/api')
     .config(['$routeProvider', function ($routeProvider) {
         return $routeProvider
             .when("/", {

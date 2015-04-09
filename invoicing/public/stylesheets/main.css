@@ -8,6 +8,10 @@ body {
     background-color: #777777;
 }
 
+[contenteditable] {
+    background-color: #777777;
+}
+
 footer {
     padding-left: 15px;
     padding-right: 15px;
